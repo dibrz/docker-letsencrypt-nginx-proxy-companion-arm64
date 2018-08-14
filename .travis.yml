@@ -33,12 +33,6 @@ install:
   - docker images
 
 before_script:
-  - git clone https://github.com/docker-library/official-images.git official-images
-  - test/setup/setup-nginx-proxy.sh
-  - test/setup/setup-boulder.sh
-  - docker pull nginx:alpine
-
-script:
   # prepare qemu
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   # get qemu-arm-static binary
@@ -48,6 +42,12 @@ script:
     curl -L -o qemu-arm-static.tar.gz https://github.com/multiarch/qemu-user-static/releases/download/v2.12.0/qemu-aarch64-static.tar.gz &&
     tar xzf qemu-arm-static.tar.gz &&
     popd
+  - git clone https://github.com/docker-library/official-images.git official-images
+  - test/setup/setup-nginx-proxy.sh
+  - test/setup/setup-boulder.sh
+  - docker pull nginx:alpine
+
+script:
   - official-images/test/run.sh "$IMAGE"
   - test/run.sh "$IMAGE"
 
